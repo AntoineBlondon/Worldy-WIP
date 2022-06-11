@@ -5,8 +5,8 @@ import sys
 pygame.init()
 vec = pygame.math.Vector2  # 2 for two dimensional
  
-HEIGHT = 500
-WIDTH = 500
+HEIGHT = 30*18
+WIDTH = 30*17
 ACC = 0.5
 FRIC = -0.12
 FPS = 60
@@ -23,7 +23,7 @@ class Player(pygame.sprite.Sprite):
         super().__init__() 
         self.surf = pygame.Surface((30, 30))
         self.surf.fill((128,255,40))
-        self.rect = self.surf.get_rect(center = (WIDTH/2, HEIGHT/2))
+        self.rect = self.surf.get_rect(center = (WIDTH/2, HEIGHT/2+30))
         self.pos = vec((WIDTH/2, HEIGHT/2))
         self.vel = vec(0,0)
         self.acc = vec(0,0)
@@ -46,14 +46,14 @@ class Player(pygame.sprite.Sprite):
         self.acc.y += self.vel.y * FRIC
         self.vel += self.acc
         self.pos += self.vel + 0.5 * self.acc         
-        if self.pos.x > WIDTH:
-            self.pos.x = WIDTH
-        if self.pos.x < 0:
-            self.pos.x = 0
+        if self.pos.x > WIDTH-15:
+            self.pos.x = WIDTH-15
+        if self.pos.x < 15:
+            self.pos.x = 15
         if self.pos.y > HEIGHT:
             self.pos.y = HEIGHT
-        if self.pos.y < 0:
-            self.pos.y = 0
+        if self.pos.y < 30:
+            self.pos.y = 30
             
         self.rect.midbottom = self.pos
  
