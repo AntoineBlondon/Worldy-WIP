@@ -1,11 +1,7 @@
-.5,5
-path,path,path
-path
-path,path,tree_leaf
 .4,5
 path,path,path,air,air,path,air,air,air,air,air,air,path,air,tree_leaf,path,path
-tree_leaf,air,air,air,air,air,air,air,air,air,air,air,air,air,air,air,air
-tree_leaf,path,air,air,air,air,air,air,air,air,air,air,air,air,air,air,air
+tree_leaf,path,tree_leaf,air,air,air,air,air,air,air,air,air,air,air,air,air,air
+tree_leaf,path,tree_leaf,air,air,air,air,air,air,air,air,air,air,air,air,air,air
 tree_leaf,air,air,air,air,air,air,air,air,air,air,air,air,air,air,air,air
 tree_leaf,air,air,air,air,air,air,air,air,air,air,air,air,air,air,air,air
 tree_leaf,air,air,air,air,air,air,air,air,air,air,air,air,air,air,air,air
