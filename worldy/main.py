@@ -18,15 +18,11 @@ pygame.display.set_caption("Worldy")
 
 
 
-P1 = Player()
+
 
 world = World()
 
-world.world1()
-
-all_sprites, collide_sprites = world.load(0,0)
-
-all_sprites.add(P1)
+P1 = Player(world,4,5)
 
 while True:
     for event in pygame.event.get():
@@ -34,6 +30,9 @@ while True:
             pygame.quit()
             sys.exit()
      
+    world.world1()
+    all_sprites, collide_sprites = world.load(4,5)
+    all_sprites.add(P1)
     displaysurface.fill((0,0,0))
     P1.update(collide_sprites)
 

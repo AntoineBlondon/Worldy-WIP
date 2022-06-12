@@ -12,9 +12,7 @@ class Tile(pygame.sprite.Sprite):
         self.hitbox = self.rect.inflate(-2,-2)
 
     def color(self):
-        dico = {"tree_leaf": (112, 141, 19),"path": (130, 212, 53)}
-        return dico[self.name]
+        return tiles[self.name][0]
     
     def isCollidable(self):
-        dico = {"tree_leaf": True, "path": False}
-        return dico[self.name]
+        return tiles[self.name][1]

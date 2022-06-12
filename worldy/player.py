@@ -4,7 +4,7 @@ from constants import *
  
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self):
+    def __init__(self,world,x,y):
         super().__init__() 
         self.surf = pygame.Surface((32, 32))
         self.surf.fill((128,255,40))
@@ -13,6 +13,8 @@ class Player(pygame.sprite.Sprite):
 
         self.direction = pygame.math.Vector2()
         self.speed = 3
+        self.currentx, self.currenty = x,y
+        self.world = world
 
 
     def input(self):
@@ -31,6 +33,18 @@ class Player(pygame.sprite.Sprite):
             self.direction.x = -1
         else:
             self.direction.x = 0
+        
+        if keys[pygame.K_d]:
+            theInput = input("Action ?\n")
+
+            theInput = theInput.split(".")
+            if theInput[0] == "set":
+                x,y,name = int(theInput[1]), int(theInput[2]),str(theInput[3])
+
+
+                self.world.set(self.currentx,self.currenty,x,y,name)
+
+
 
     def move(self,speed,collide_sprites):
         if self.direction.magnitude() != 0:
