@@ -8,42 +8,57 @@ class Player(pygame.sprite.Sprite):
         super().__init__() 
         self.surf = pygame.Surface((30, 30))
         self.surf.fill((128,255,40))
-        self.rect = self.surf.get_rect(center = (WIDTH/2, HEIGHT/2+30))
-        self.pos = vec((WIDTH/2, HEIGHT/2))
-        self.vel = vec(0,0)
-        self.acc = vec(0,0)
-    def move(self):
-        self.acc = vec(0,0)
-    
-        pressed_keys = pygame.key.get_pressed()
+        self.rect = self.surf.get_rect(center=(WIDTH/2,HEIGHT/2))
+        self.hitbox = self.rect.inflate(0,-2)
 
-        if pressed_keys[K_LEFT]:
-            self.acc.x = -ACC        
-        if pressed_keys[K_RIGHT]:
-            self.acc.x = ACC
-        if pressed_keys[K_DOWN]:
-            self.acc.y = ACC
-        if pressed_keys[K_UP]:
-            self.acc.y = -ACC
+        self.direction = pygame.math.Vector2()
+        self.speed = 3
+
+    def input(self):
+        keys = pygame.key.get_pressed()
+
+        if keys[pygame.K_UP]:
+            self.direction.y = -1
+        elif keys[pygame.K_DOWN]:
+            self.direction.y = 1
+        else:
+            self.direction.y = 0
+
+        if keys[pygame.K_RIGHT]:
+            self.direction.x = 1
+        elif keys[pygame.K_LEFT]:
+            self.direction.x = -1
+        else:
+            self.direction.x = 0
+
+    def move(self,speed,collide_sprites):
+        if self.direction.magnitude() != 0:
+            self.direction = self.direction.normalize()
+
+        self.hitbox.x += self.direction.x * speed
+        self.collision('horizontal',collide_sprites)
+        self.hitbox.y += self.direction.y * speed
+        self.collision('vertical',collide_sprites)
+        self.rect.center = self.hitbox.center
         
-        
-        self.acc.x += self.vel.x * FRIC
-        self.acc.y += self.vel.y * FRIC
-        self.vel += self.acc
-        self.pos += self.vel + 0.5 * self.acc         
-        if self.pos.x > WIDTH-15:
-            self.pos.x = WIDTH-15
-        if self.pos.x < 15:
-            self.pos.x = 15
-        if self.pos.y > HEIGHT:
-            self.pos.y = HEIGHT
-        if self.pos.y < 30:
-            self.pos.y = 30
-            
-        self.rect.midbottom = self.pos
-    def collide(self, sprites):
-        hits = pygame.sprite.spritecollide(self , sprites, False)
-        if hits:
-            self.pos.y = hits[0].rect.top + 1
-            self.vel.y = 0
- 
+
+    def collision(self,direction,collide_sprites):
+        if direction == 'horizontal':
+            for sprite in collide_sprites:
+                if sprite.hitbox.colliderect(self.hitbox):
+                    if self.direction.x > 0: # moving right
+                        self.hitbox.right = sprite.hitbox.left
+                    if self.direction.x < 0: # moving left
+                        self.hitbox.left = sprite.hitbox.right
+
+        if direction == 'vertical':
+            for sprite in collide_sprites:
+                if sprite.hitbox.colliderect(self.hitbox):
+                    if self.direction.y > 0: # moving down
+                        self.hitbox.bottom = sprite.hitbox.top
+                    if self.direction.y < 0: # moving up
+                        self.hitbox.top = sprite.hitbox.bottom
+
+    def update(self,collide_sprites):
+        self.input()
+        self.move(self.speed, collide_sprites)
