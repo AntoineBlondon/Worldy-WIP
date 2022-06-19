@@ -94,6 +94,12 @@ class World():
         file1 = open('levels/world1.txt', 'r')
         Lines = file1.readlines()
 
+        xd, yd = int(xd), int(yd)
+
+        while xd >= WIDTH//32:
+            xd-=1
+        while yd >= HEIGHT//32:
+            yd-=1
         count = 0
         a = False
         ycount = -1
@@ -182,3 +188,40 @@ class World():
                 ycount += 1
         file1.close()
         return ycount+1
+
+
+
+    def getName(self,cux,cuy,x,y):
+        file1 = open('levels/world1.txt', 'r')
+        Lines = file1.readlines()
+
+        x, y = int(x), int(y)
+
+        while x >= WIDTH//32:
+            x-=1
+        while y >= HEIGHT//32:
+            y-=1
+
+        count = 0
+        a = False
+        ycount = -1
+        Line = ""
+        for line in Lines:
+            count += 1
+            if line.startswith("."):
+                
+                if int(line[1:].split(',')[0]) == cux and int(line[1:].split(',')[1]) == cuy:
+                    a = True
+                else:
+                    a = False
+            if a and not line.startswith("."):
+                ycount+=1
+
+                if ycount == y:
+                    Line = line
+            
+                
+        file1.close()
+
+        
+        return Line.split(",")[x].strip()

@@ -1,7 +1,6 @@
 import pygame
 from pygame.locals import *
 from constants import *
- 
 
 class Player(pygame.sprite.Sprite):
     def __init__(self,world,x,y):
@@ -11,14 +10,21 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.surf.get_rect(center=(WIDTH/2,HEIGHT/2))
         self.hitbox = self.rect.inflate(0,-2)
 
+        
+
         self.direction = pygame.math.Vector2()
+        self.lastDirection = self.direction
         self.speed = 3
         self.currentx, self.currenty = x,y
         self.world = world
+        
 
 
     def input(self):
         keys = pygame.key.get_pressed()
+
+
+        interactName = ""
 
         if keys[pygame.K_UP]:
             self.direction.y = -1
@@ -34,6 +40,13 @@ class Player(pygame.sprite.Sprite):
         else:
             self.direction.x = 0
         
+        if self.direction.x != 0:
+            self.lastDirection.x = self.direction.x
+            self.lastDirection.y = 0
+        elif self.direction.y !=0:
+            self.lastDirection.y = self.direction.y
+            self.lastDirection.x = 0
+
         if keys[pygame.K_d]:
             theInput = input("Action ?\n")
 
@@ -43,6 +56,28 @@ class Player(pygame.sprite.Sprite):
 
 
                 self.world.set(self.currentx,self.currenty,x,y,name)
+        
+        
+        elif keys[pygame.K_x]:
+            interactName = "air"
+        elif keys[pygame.K_c]:
+            interactName = "path"
+        elif keys[pygame.K_v]:
+            interactName = "tree_leaf"
+
+        if interactName != "":
+
+            x,y = self.getInteractBlockCoords()
+
+            name = self.world.getName(self.currentx,self.currenty,x,y)
+            print(name)
+
+            self.world.set(self.currentx,self.currenty,x,y,interactName)
+
+
+
+        
+
 
 
 
@@ -77,3 +112,15 @@ class Player(pygame.sprite.Sprite):
     def update(self,collide_sprites):
         self.input()
         self.move(self.speed, collide_sprites)
+    
+
+    def getInteractBlockCoords(self):
+
+        x,y = (self.hitbox.x+16)//32,(self.hitbox.y+16)//32
+
+        x += self.lastDirection.x
+        y += self.lastDirection.y
+        
+
+        return (x,y)
+        
